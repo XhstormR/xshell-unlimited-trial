@@ -18,27 +18,21 @@ void printHEX(unsigned char *data, int len) {
 
 int main() {
     HMODULE hMod = LoadLibrary("nslicense.dll");
-    typedef int (*PFN1)(void *, int);
+    typedef int (*PFN1)(void *, void *);
     PFN1 pfn1 = (PFN1)GetProcAddress(hMod, "NSLICENSE_DateToMagicCode");
 
     unsigned short date[3] = {0};
-    unsigned char code1[22] = {0};
-    unsigned char code2[22] = {0};
+    unsigned char code[22] = {0};
 
     initDate(date);
 
-    /* 第一种 */
-    pfn1(date, (int)code1);
-    printHEX(code1, 22);
+    pfn1(date, code);
+
+    printHEX(code, 22);
     printf("\n");
-    printHEX(code1, 16);
+    printHEX(code, 16);
     printHEX((unsigned char *)&systemtime, 4);
     printHEX((unsigned char *)&systemtime + 6, 2);
-    printf("\n");
-
-    /* 第二种 */
-    pfn1(&systemtime, (int)code2);
-    printHEX(code2, 22);
     printf("\n");
 
     FreeLibrary(hMod);
