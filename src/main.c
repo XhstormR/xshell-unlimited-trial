@@ -39,10 +39,16 @@ int main() {
 
   FreeLibrary(hMod);
 
-  HKEY hkey;
-  RegCreateKey(HKEY_LOCAL_MACHINE, "SOFTWARE\\NetSarang\\Xshell\\6", &hkey);
-  RegSetValueEx(hkey, "MagicCode", 0, REG_BINARY, code, 22);
-  RegCloseKey(hkey);
+  char *keys[] = {"SOFTWARE\\NetSarang\\Xftp\\6",
+                  "SOFTWARE\\NetSarang\\Xshell\\6",
+                  "SOFTWARE\\NetSarang\\Xmanager\\6", 0};
+
+  for (int i = 0; keys[i]; i++) {
+    HKEY hkey;
+    RegCreateKey(HKEY_LOCAL_MACHINE, keys[i], &hkey);
+    RegSetValueEx(hkey, "MagicCode", 0, REG_BINARY, code, 22);
+    RegCloseKey(hkey);
+  }
 
   RegDeleteTreeA(HKEY_CURRENT_USER, "Software\\Microsoft\\NetLicense");
 
